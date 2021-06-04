@@ -71,9 +71,9 @@ class ProductController extends Controller
         $prod_query3 = $request->city;
 
 
-        log::info($prod_query1);
-        log::info($prod_query2);
-        log::info($prod_query3);
+        // log::info($prod_query1);
+        // log::info($prod_query2);
+        // log::info($prod_query3);
 
         // $needles = explode(',', $q);
 
