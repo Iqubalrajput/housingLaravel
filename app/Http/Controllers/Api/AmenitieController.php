@@ -16,9 +16,10 @@ class AmenitieController extends Controller
      */
     public function index()
     {
+        $data=Amenitie::where('IsEnable', '1')->orderBy('id', 'asc')->get();
         return response()->json([
-            'data' => Amenitie::orderBy('id', 'asc')->get()
-        ]);
+            'data' => $data
+        ], 200);
     }
 
     /**

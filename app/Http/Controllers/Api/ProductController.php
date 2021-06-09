@@ -30,7 +30,7 @@ class ProductController extends Controller
 
     public function index_featured()
     {
-        $data = product::with('UserDetail')->where('delete_flag', 0)->Latest()->paginate(50);
+        $data = product::with('UserDetail','wishlist')->where('delete_flag', 0)->Latest()->paginate(50);
         return response()->json([
             'data' =>$data,
         ], 201);

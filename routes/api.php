@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 // });
 
 
-// Route::resource('amenities', 'App\Http\Controllers\Api\AmenitieController');
+Route::resource('amenities', 'App\Http\Controllers\Api\AmenitieController');
 
 Route::group([
     'prefix' => 'auth'
@@ -96,6 +96,9 @@ Route::group([
         Route::post('/lawyer_create_service', 'App\Http\Controllers\Api\LawyerController@lawyer_create_service');
         Route::get('/lawyer_service', 'App\Http\Controllers\Api\LawyerController@lawyer_service');
         Route::post('/lawyer_service_delete', 'App\Http\Controllers\Api\LawyerController@lawyer_service_delete');
+
+        Route::resource('wishlist', 'App\Http\Controllers\Api\WishlistController');
+
 
 
     });
