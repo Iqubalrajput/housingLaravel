@@ -36,9 +36,6 @@ Route::group([
     Route::post('/reverify', 'App\Http\Controllers\Api\AuthController@reverify');
     Route::post('/forgot_password', 'App\Http\Controllers\Api\AuthController@forgot_password');
 
-
-
-
     Route::group([
         'middleware' => 'auth:api'
     ], function() {
@@ -98,6 +95,8 @@ Route::group([
         Route::post('/lawyer_service_delete', 'App\Http\Controllers\Api\LawyerController@lawyer_service_delete');
 
         Route::resource('wishlist', 'App\Http\Controllers\Api\WishlistController');
+        Route::post('wishlistDelete', 'App\Http\Controllers\Api\WishlistController@delete');
+       Route::get('/get_product_wishlist', 'App\Http\Controllers\Api\ProductController@index_featured_wishlist');
 
 
 

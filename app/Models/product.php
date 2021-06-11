@@ -86,7 +86,7 @@ class product extends Model
 
     public function wishlist()
     {
-        return $this->hasOne('App\Models\Wishlist', 'product_id','id');
+        return $this->hasMany('App\Models\Wishlist', 'product_id','id');
     }
 
     public function roles()

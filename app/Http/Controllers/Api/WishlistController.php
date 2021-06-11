@@ -45,9 +45,6 @@ class WishlistController extends Controller
     {
         // user fetch using databse
         $user_id = Auth::user()->id;
-
-
-        
         // fetch details user product db        
         $Wishlist = Wishlist::where('user_id',$user_id)->where('product_id',$request->product_id)->get();
         $count = count($Wishlist);
@@ -112,6 +109,16 @@ class WishlistController extends Controller
      */
     public function destroy(Wishlist $wishlist)
     {
-        //
+          
+    }
+     public function delete(Request $request)
+    {
+        $user_id = Auth::user()->id;
+        $whereArray = array('user_id'=>$user_id,'product_id'=>$request->product_id);
+      $data= Wishlist::where($whereArray)->delete();
+            return response()->json([
+                'message' => 'Wishlist Successfully Deleted ',
+            ], 201);
+
     }
 }

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Log;
 use Image;
 use App\Models\User;
 use Illuminate\Support\Str;
+use App\Models\Wishlist;
 class ProductController extends Controller
 {
     /**
@@ -30,13 +31,41 @@ class ProductController extends Controller
 
     public function index_featured()
     {
-        $data = product::with('UserDetail','wishlist')->where('delete_flag', 0)->Latest()->paginate(50);
+        $data = product::with('UserDetail')->where('delete_flag', 0)->Latest()->paginate(50);
         return response()->json([
             'data' =>$data,
         ], 201);
     }
+    public function index_featured_wishlist()
+    {
+        $user_id = Auth::user()->id;
+        $product = product::with('UserDetail')->where('delete_flag', 0)->Latest()->paginate(50);
+        $Wishlist=Wishlist::where('user_id', $user_id)->orderBy('id', 'asc')->get();
+        $productcount = count($product);
+        $wishlistcount = count($Wishlist);
 
-
+       $productArray = json_decode(json_encode($product), true);
+       $WishlistArray = json_decode(json_encode($Wishlist), true);
+       
+       // wishlist check with product id nd wishlist id
+       for ($i=0; $i < $productcount; $i++) {    
+            for ($j=0; $j < $wishlistcount; $j++) { 
+                if($productArray['data'][$i]['id']==$WishlistArray[$j]['product_id']){
+                    $addWishlist="true";
+                    array_push($productArray['data'][$i],$addWishlist);
+                }
+            }
+        }
+        if($productArray['data']){
+            return response()->json([
+            'data' =>$productArray['data'],
+          ], 201);
+        }else{
+            return response()->json([
+            'data' =>$product,
+          ], 201);
+        }
+    }
 
      public function search_prod_by_id(Request $request){
 
