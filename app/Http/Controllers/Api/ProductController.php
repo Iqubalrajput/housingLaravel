@@ -91,9 +91,9 @@ class ProductController extends Controller
      public function search_func(Request $request){
 
         $request->validate([
-            'build_name' => '',
-            'type' => '',
-            'city' => ''
+            'build_name' => 'required',
+            'type' => 'required',
+            'city' => 'required'
         ]);
         $prod_query1 = $request->build_name;
         $prod_query2 = $request->type;
@@ -197,11 +197,11 @@ class ProductController extends Controller
             'map_latitude' => '' ,
             'map_longitude' => '' ,
             'display_address' => 'required' ,
-            'product_image1' => 'required' ,
-            'product_image2' => 'required' ,
-            'product_image3' => 'required' ,
-            'product_image4' => 'required' ,
-            'product_image5' => 'required' ,
+            // 'product_image1' => 'required' ,
+            // 'product_image2' => 'required' ,
+            // 'product_image3' => 'required' ,
+            // 'product_image4' => 'required' ,
+            // 'product_image5' => 'required' ,
             'area' => 'required' ,
             'area_unit' => 'required' ,
             'carpet_area' => 'required' ,
@@ -239,43 +239,48 @@ class ProductController extends Controller
             'features' => 'required' ,
             'nearby_places' => 'required' ,
         ]);
+     $imageName1=null;     
+    if($request->input('product_image1') != null){
+            $base64_image1 = $request->input('product_image1'); // your base64 encoded
+            @list($type, $file_data1) = explode(';', $base64_image1);
+            @list(, $file_data1) = explode(',', $file_data1);
+            $imageName1 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
+            Storage::disk('public')->put($imageName1, base64_decode($file_data1));
+    }
 
-
-
-        $base64_image1 = $request->input('product_image1'); // your base64 encoded
-        @list($type, $file_data1) = explode(';', $base64_image1);
-        @list(, $file_data1) = explode(',', $file_data1);
-        $imageName1 = 'IMAGE'.Str::random(30).'.'.'png';
-        Storage::disk('public')->put('product_image_file/'.$imageName1, base64_decode($file_data1));
-
-
+    $imageName2=null;
+    if($request->input('product_image2') != null){
         $base64_image2 = $request->input('product_image2'); // your base64 encoded
         @list($type, $file_data2) = explode(';', $base64_image2);
         @list(, $file_data2) = explode(',', $file_data2);
-        $imageName2 = 'IMAGE'.Str::random(30).'.'.'png';
-        Storage::disk('public')->put('product_image_file/'.$imageName2, base64_decode($file_data2));
+        $imageName2 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
+        Storage::disk('public')->put($imageName2, base64_decode($file_data2));
+    }
 
-
+   $imageName3=null;
+    if($request->input('product_image3') != null){
         $base64_image3 = $request->input('product_image3'); // your base64 encoded
         @list($type, $file_data3) = explode(';', $base64_image3);
         @list(, $file_data3) = explode(',', $file_data3);
-        $imageName3 = 'IMAGE'.Str::random(30).'.'.'png';
-        Storage::disk('public')->put('product_image_file/'.$imageName3, base64_decode($file_data3));
-
-
+        $imageName3 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
+        Storage::disk('public')->put($imageName3, base64_decode($file_data3));
+    }
+    $imageName4=null;
+    if($request->input('product_image4') != null){
         $base64_image4 = $request->input('product_image4'); // your base64 encoded
         @list($type, $file_data4) = explode(';', $base64_image4);
         @list(, $file_data4) = explode(',', $file_data4);
-        $imageName4 = 'IMAGE'.Str::random(30).'.'.'png';
-        Storage::disk('public')->put('product_image_file/'.$imageName4, base64_decode($file_data4));
-
-
+        $imageName4 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
+        Storage::disk('public')->put($imageName4, base64_decode($file_data4));
+    }
+    $imageName5=null;
+    if($request->input('product_image5') != null){
         $base64_image5 = $request->input('product_image5'); // your base64 encoded
         @list($type, $file_data5) = explode(';', $base64_image5);
         @list(, $file_data5) = explode(',', $file_data5);
-        $imageName5 = 'IMAGE'.Str::random(30).'.'.'png';
-        Storage::disk('public')->put('product_image_file/'.$imageName5, base64_decode($file_data5));
-
+        $imageName5 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
+        Storage::disk('public')->put($imageName5, base64_decode($file_data5));
+    }
         $user_id = Auth::user()->id;
 
         $product_data = new Product([
@@ -290,11 +295,11 @@ class ProductController extends Controller
             'map_latitude' => $request->map_latitude,
             'map_longitude' => $request->map_longitude,
             'display_address' => $request->display_address,
-            'product_image1' => 'product_image_file/'.$imageName1,
-            'product_image2' => 'product_image_file/'.$imageName2,
-            'product_image3' => 'product_image_file/'.$imageName3,
-            'product_image4' => 'product_image_file/'.$imageName4,
-            'product_image5' => 'product_image_file/'.$imageName5,
+            'product_image1' => $imageName1,
+            'product_image2' => $imageName2,
+            'product_image3' => $imageName3,
+            'product_image4' => $imageName4,
+            'product_image5' => $imageName5,
             'area' => $request->area,
             'area_unit' => $request->area_unit,
             'carpet_area' => $request->carpet_area,
@@ -332,7 +337,6 @@ class ProductController extends Controller
             'features' => $request->features,
             'nearby_places' => $request->nearby_places,
         ]);
-
         $user_type = Auth::user()->usertype;
 
         if ($user_type == 1)
@@ -366,12 +370,12 @@ class ProductController extends Controller
             'nearest_landmark' => 'required' ,
             'map_latitude' => '' ,
             'map_longitude' => '' ,
-            'product_image1' => 'required' ,
-            'product_image2' => 'required' ,
-            'product_image3' => 'required' ,
-            'product_image4' => 'required' ,
-            'product_image5' => 'required' ,
-            'nearby_places' => 'required' ,
+            // 'product_image1' => 'required' ,
+            // 'product_image2' => 'required' ,
+            // 'product_image3' => 'required' ,
+            // 'product_image4' => 'required' ,
+            // 'product_image5' => 'required' ,
+            // 'nearby_places' => 'required' ,
             'area' => 'required' ,
             'area_unit' => 'required' ,
             'carpet_area' => 'required' ,
@@ -417,40 +421,50 @@ class ProductController extends Controller
         ]);
 
 
-
+    $imageName1=null;
+    if($request->input('product_image1') != null){
         $base64_image1 = $request->input('product_image1'); // your base64 encoded
         @list($type, $file_data1) = explode(';', $base64_image1);
         @list(, $file_data1) = explode(',', $file_data1);
-        $imageName1 = 'IMAGE'.Str::random(30).'.'.'png';
+        $imageName1 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
         Storage::disk('public')->put('product_image_file/'.$imageName1, base64_decode($file_data1));
+    }
 
-
+    $imageName2=null;
+    if($request->input('product_image2') != null){
         $base64_image2 = $request->input('product_image2'); // your base64 encoded
         @list($type, $file_data2) = explode(';', $base64_image2);
         @list(, $file_data2) = explode(',', $file_data2);
-        $imageName2 = 'IMAGE'.Str::random(30).'.'.'png';
+        $imageName2 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
         Storage::disk('public')->put('product_image_file/'.$imageName2, base64_decode($file_data2));
+    }
 
-
+    $imageName3=null;
+    if($request->input('product_image3') != null){
         $base64_image3 = $request->input('product_image3'); // your base64 encoded
         @list($type, $file_data3) = explode(';', $base64_image3);
         @list(, $file_data3) = explode(',', $file_data3);
-        $imageName3 = 'IMAGE'.Str::random(30).'.'.'png';
+        $imageName3 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
         Storage::disk('public')->put('product_image_file/'.$imageName3, base64_decode($file_data3));
+    }
 
-
+    $imageName4=null;
+    if($request->input('product_image4') != null){
         $base64_image4 = $request->input('product_image4'); // your base64 encoded
         @list($type, $file_data4) = explode(';', $base64_image4);
         @list(, $file_data4) = explode(',', $file_data4);
-        $imageName4 = 'IMAGE'.Str::random(30).'.'.'png';
+        $imageName4 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
         Storage::disk('public')->put('product_image_file/'.$imageName4, base64_decode($file_data4));
+    }
 
-
+    $imageName5=null;
+    if($request->input('product_image5') != null){
         $base64_image5 = $request->input('product_image5'); // your base64 encoded
         @list($type, $file_data5) = explode(';', $base64_image5);
         @list(, $file_data5) = explode(',', $file_data5);
-        $imageName5 = 'IMAGE'.Str::random(30).'.'.'png';
+        $imageName5 = 'product_image_file/IMAGE'.Str::random(30).'.'.'png';
         Storage::disk('public')->put('product_image_file/'.$imageName5, base64_decode($file_data5));
+    }
 
         $user_id = Auth::user()->id;
 
@@ -468,11 +482,11 @@ class ProductController extends Controller
             'nearest_landmark' => $request->nearest_landmark ,
             'map_latitude' => $request->map_latitude ,
             'map_longitude' => $request->map_longitude ,
-            'product_image1' => 'product_image_file/'.$imageName1,
-            'product_image2' => 'product_image_file/'.$imageName2,
-            'product_image3' => 'product_image_file/'.$imageName3,
-            'product_image4' => 'product_image_file/'.$imageName4,
-            'product_image5' => 'product_image_file/'.$imageName5,
+            'product_image1' => $imageName1,
+            'product_image2' => $imageName2,
+            'product_image3' => $imageName3,
+            'product_image4' => $imageName4,
+            'product_image5' => $imageName5,
             'nearby_places' => $request->nearby_places ,
             'area' => $request->area ,
             'area_unit' => $request->area_unit ,
@@ -614,11 +628,11 @@ class ProductController extends Controller
             'available_for' => 'required',
             'brokerage_charges' => 'required',
             'type' => 'required',
-            'product_image1' => 'required',
-            'product_image2' => 'required',
-            'product_image3' => 'required',
-            'product_image4' => 'required',
-            'product_image5' => 'required',
+            // 'product_image1' => 'required',
+            // 'product_image2' => 'required',
+            // 'product_image3' => 'required',
+            // 'product_image4' => 'required',
+            // 'product_image5' => 'required',
             'bedroom' => 'required',
             'bathroom' => 'required',
             'balconies' => 'required',
